@@ -125,9 +125,9 @@ signOutFile=${DIST_DIR}/${gameFile}
 mkdir -p ${DIST_DIR}
 
 if [[ -n "$ksPass" ]]; then
-  apksigner sign --ks ${SIGN_KS} --ks-pass "pass:${ksPass}" --out ${signOutFile} ${gameDistFile}
+  apksigner sign --ks ${SIGN_KS} --ks-pass "pass:${ksPass}" --v4-signing-enabled false --out ${signOutFile} ${gameDistFile}
 else
-  apksigner sign --ks ${SIGN_KS} --out ${signOutFile} ${gameDistFile}
+  apksigner sign --ks ${SIGN_KS} --v4-signing-enabled false --out ${signOutFile} ${gameDistFile}
 fi
 
 echo -e "\nSuccess build ${signOutFile}"
