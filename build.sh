@@ -93,7 +93,7 @@ if [[ ! -f ${downloadFile} ]]; then
     exit 1
   fi
 else
-  echo -e "Exist game apk $gameFile, skip download."
+  echo -e "Exist $downloadFile, skip download."
 fi
 
 appDebugOutput=$OUTPUT_DIR/${APP_DEBUG%.*}
@@ -101,29 +101,27 @@ echo -e "\nDecoding ${APP_DEBUG}..."
 apktool d -f $APP_DEBUG_FILE -o $appDebugOutput
 
 gameOutput=$OUTPUT_DIR/${gameFile%.*}
-echo -e "\nDecoding ${gameFile}..."
+echo -e "\nDecoding ${gameFile} to ${gameOutput}..."
 apktool d -f $downloadFile -o ${gameOutput}
 
-
-echo -e "\nCopy and Edit ${gameOutput}..."
-find $gameOutput/lib/* -maxdepth 0 ! -name "arm64-v8a" -exec rm -rf '{}' +
+echo -e "\nUpdate ${gameOutput}..."
 libName=lib${gameName}.so
+echo -e "Copy ${libName} to libModBNM.so"
+find $gameOutput/lib/* -maxdepth 0 ! -name "arm64-v8a" -exec rm -rf '{}' +
 cp $appDebugOutput/lib/arm64-v8a/${libName} $gameOutput/lib/arm64-v8a/libModBNM.so
+echo -e "Copy smali_classes to ${gameOutput}"
 cp -r $appDebugOutput/smali_classes* $gameOutput
-
 gameActivityFile=$gameOutput/smali/${gameActivity//./\/}.smali
-echo -e "\nUpdate ${gameActivityFile}..."
+echo -e "Edit ${gameActivityFile}"
 sed -i '' '/.method protected onCreate/a\
 invoke-static {p0}, Lcom/android/support/Main;->start(Landroid/content/Context;)V' $gameActivityFile
 
-echo -e "\nBuild ${gameFile}..."
+echo -e "\nBuild and Sign ${gameFile}..."
 apktool b -f ${gameOutput}
 
-echo -e "\nSign ${gameOutput}..."
 gameDistFile=${gameOutput}/dist/${gameFile}
 signOutFile=${DIST_DIR}/${gameFile}
 mkdir -p ${DIST_DIR}
-
 if [[ -n "$ksPass" ]]; then
   apksigner sign --ks ${SIGN_KS} --ks-pass "pass:${ksPass}" --v4-signing-enabled false --out ${signOutFile} ${gameDistFile}
 else
