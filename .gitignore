@@ -1,3 +1,5 @@
 dist/
 download/
 output/
+decode/
+app-debug.apk

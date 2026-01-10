@@ -1,12 +1,11 @@
 #!/usr/bin/env bash
 
 DOWNLOAD_DIR=download
-OUTPUT_DIR=output
+DECODE_DIR=decode
 DIST_DIR=dist
 SIGN_KS=sign.jks
-APP_DEBUG=apk-debug.apk
-APP_DEBUG_FILE=${DOWNLOAD_DIR}/${APP_DEBUG}
-APP_DEBUG_DOWNLOAD_URL=https://github.com/fourcels/Android-Mod-Menu-BNM/releases/latest/download/app-debug.apk
+APP_DEBUG_FILE=app-debug.apk
+APP_DEBUG_DOWNLOAD_URL=https://github.com/fourcels/Android-Mod-Menu-BNM/releases/latest/download/${APP_DEBUG_FILE}
 gameName=horny-villa
 gameActivity=com.unity3d.player.UnityPlayerActivity
 downloadUrl="https://www.nutaku.net/games/horny-villa/app-update/"
@@ -68,7 +67,7 @@ done
 
 shift $((OPTIND-1))
 
-echo -e "Downloading ${APP_DEBUG}..."
+echo -e "Downloading ${APP_DEBUG_FILE}..."
 if [[ ! -f ${APP_DEBUG_FILE} ]]; then
   curl -L $APP_DEBUG_DOWNLOAD_URL -o $APP_DEBUG_FILE
 else
@@ -96,11 +95,11 @@ else
   echo -e "Exist $downloadFile, skip download."
 fi
 
-appDebugOutput=$OUTPUT_DIR/${APP_DEBUG%.*}
-echo -e "\nDecoding ${APP_DEBUG}..."
+appDebugOutput=$DECODE_DIR/${APP_DEBUG%.*}
+echo -e "\nDecoding ${APP_DEBUG_FILE} to ${appDebugOutput}..."
 apktool d -f $APP_DEBUG_FILE -o $appDebugOutput
 
-gameOutput=$OUTPUT_DIR/${gameFile%.*}
+gameOutput=$DECODE_DIR/${gameFile%.*}
 echo -e "\nDecoding ${gameFile} to ${gameOutput}..."
 apktool d -f $downloadFile -o ${gameOutput}
 
@@ -127,5 +126,8 @@ if [[ -n "$ksPass" ]]; then
 else
   apksigner sign --ks ${SIGN_KS} --v4-signing-enabled false --out ${signOutFile} ${gameDistFile}
 fi
+
+echo -e "\nClear ${DECODE_DIR} dir..."
+rm -rf $DECODE_DIR
 
 echo -e "\nSuccess build ${signOutFile}"
