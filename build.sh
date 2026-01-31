@@ -17,7 +17,7 @@ Usage: $0 [-h] [-p <password>]
 OPTIONS:
   -h  Show this help message
   -p  keystore password (requires an argument)
-  -g  game name (horny-villa|ark-recode|mafia-queens)
+  -g  game name (horny-villa|ark-recode|mafia-queens|wet-wealth)
 
 Example:
   $0 -p password -g horny-villa
@@ -45,6 +45,10 @@ while getopts ":p:g:h" opt; do
         mafia-queens)
           gameActivity=com.unity3d.player.UnityPlayerActivity
           downloadUrl="https://www.nutaku.net/games/mafia-queens/app-update/"
+          ;;
+        wet-wealth)
+          gameActivity=com.unity3d.player.UnityPlayerActivity
+          downloadUrl="https://www.nutaku.net/games/wet-wealth/app-update/"
           ;;
         *)
           usage
