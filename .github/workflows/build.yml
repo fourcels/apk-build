@@ -1,4 +1,4 @@
-name: Android CI
+name: Apk build
 
 on:
   push:
@@ -17,4 +17,14 @@ jobs:
           distribution: "temurin" # See 'Supported distributions' for available options
           java-version: "21"
 
-      - uses: ./.github/actions/setup-build-env
+      - name: Setup Android SDK
+        uses: android-actions/setup-android@v3
+
+      - name: Setup apktool
+        run: |
+          apksigner --version
+      # - name: Setup apktool
+      #   run: |
+      #     curl -o /usr/local/bin/apktool https://raw.githubusercontent.com/iBotPeaches/Apktool/master/scripts/linux/apktool
+      #     curl -o /usr/local/bin/apktool.jar https://bitbucket.org/iBotPeaches/apktool/downloads/apktool_2.12.1.jar
+      #     chmod -x /usr/local/bin/apktool /usr/local/bin/apktool.jar
