@@ -29,3 +29,9 @@ jobs:
 
       - name: Build apk
         run: ./build.sh wet-wealth
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: my-artifact
+          path: |
+            dist/*.apk

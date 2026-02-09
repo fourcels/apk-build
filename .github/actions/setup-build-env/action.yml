@@ -1,9 +1,0 @@
-name: "Setup Build ENV"
-runs:
-  using: "composite"
-  steps:
-    - name: Setup apktool
-      run: |
-        curl -o /usr/local/bin/apktool https://raw.githubusercontent.com/iBotPeaches/Apktool/master/scripts/linux/apktool
-        curl -o /usr/local/bin/apktool.jar https://bitbucket.org/iBotPeaches/apktool/downloads/apktool_2.12.1.jar
-        chmod -x /usr/local/bin/apktool /usr/local/bin/apktool.jar
