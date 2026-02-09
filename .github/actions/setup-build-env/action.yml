@@ -3,7 +3,7 @@ runs:
   using: "composite"
   steps:
     - name: Setup apktool
-      run:
-        - curl -o apktool https://raw.githubusercontent.com/iBotPeaches/Apktool/master/scripts/linux/apktool
-        - curl -o apktool.jar https://bitbucket.org/iBotPeaches/apktool/downloads/apktool_2.12.1.jar
+      run: |
+        curl -o apktool https://raw.githubusercontent.com/iBotPeaches/Apktool/master/scripts/linux/apktool
+        curl -o apktool.jar https://bitbucket.org/iBotPeaches/apktool/downloads/apktool_2.12.1.jar
       shell: bash
