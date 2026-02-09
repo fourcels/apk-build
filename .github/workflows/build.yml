@@ -17,4 +17,4 @@ jobs:
           distribution: "temurin" # See 'Supported distributions' for available options
           java-version: "21"
 
-      - uses: .github/actions/setup-build-env
+      - uses: ./.github/actions/setup-build-env
