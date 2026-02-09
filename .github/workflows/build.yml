@@ -17,12 +17,9 @@ jobs:
           distribution: "temurin" # See 'Supported distributions' for available options
           java-version: "21"
 
-      - name: Setup Android SDK
-        uses: android-actions/setup-android@v3
-
       - name: Setup apktool
         run: |
-          apksigner --version
+          echo $ANDROID_HOME
       # - name: Setup apktool
       #   run: |
       #     curl -o /usr/local/bin/apktool https://raw.githubusercontent.com/iBotPeaches/Apktool/master/scripts/linux/apktool
