@@ -7,6 +7,7 @@ SIGN_KS=sign.jks
 APP_DEBUG_FILE=app-debug.apk
 APP_DEBUG_DOWNLOAD_URL=https://github.com/fourcels/Android-Mod-Menu-BNM/releases/latest/download/${APP_DEBUG_FILE}
 declare -A apps
+mkdir -p $DOWNLOAD_DIR
 
 # Function to check if a command exists
 check_command() {
@@ -72,8 +73,6 @@ read -r app_name app_activity app_download <<< ${apps[$1]}
 if [[ -z "$app_name" ]]; then
   usage
 fi
-
-echo $app_name $app_activity $app_download
 
 echo -e "Downloading ${APP_DEBUG_FILE}..."
 if [[ ! -f ${APP_DEBUG_FILE} ]]; then
