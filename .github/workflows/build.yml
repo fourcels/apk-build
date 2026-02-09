@@ -21,6 +21,7 @@ jobs:
         run: |
           ls -la $ANDROID_HOME/build-tools
           echo "$ANDROID_HOME/build-tools/36.1.0" >> $GITHUB_PATH
+          echo $GITHUB_PATH
           which apksigner
 
       # - name: Setup apktool
