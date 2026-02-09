@@ -21,12 +21,11 @@ jobs:
         run: |
           echo "$ANDROID_HOME/build-tools/36.1.0" >> $GITHUB_PATH
 
-      - name: test apksigner
+      - name: Setup apktool
         run: |
-          which apksigner
+          curl -o /usr/local/bin/apktool https://raw.githubusercontent.com/iBotPeaches/Apktool/master/scripts/linux/apktool
+          curl -o /usr/local/bin/apktool.jar https://bitbucket.org/iBotPeaches/apktool/downloads/apktool_2.12.1.jar
+          chmod -x /usr/local/bin/apktool /usr/local/bin/apktool.jar
 
-      # - name: Setup apktool
-      #   run: |
-      #     curl -o /usr/local/bin/apktool https://raw.githubusercontent.com/iBotPeaches/Apktool/master/scripts/linux/apktool
-      #     curl -o /usr/local/bin/apktool.jar https://bitbucket.org/iBotPeaches/apktool/downloads/apktool_2.12.1.jar
-      #     chmod -x /usr/local/bin/apktool /usr/local/bin/apktool.jar
+      - name: Build apk
+        run: ./build.sh wet-wealth
