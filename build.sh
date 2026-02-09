@@ -73,6 +73,8 @@ if [[ -z "$app_name" ]]; then
   usage
 fi
 
+echo $app_name $app_activity $app_download
+
 echo -e "Downloading ${APP_DEBUG_FILE}..."
 if [[ ! -f ${APP_DEBUG_FILE} ]]; then
   curl -L $APP_DEBUG_DOWNLOAD_URL -o $APP_DEBUG_FILE
