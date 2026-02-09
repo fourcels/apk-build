@@ -6,55 +6,48 @@ DIST_DIR=dist
 SIGN_KS=sign.jks
 APP_DEBUG_FILE=app-debug.apk
 APP_DEBUG_DOWNLOAD_URL=https://github.com/fourcels/Android-Mod-Menu-BNM/releases/latest/download/${APP_DEBUG_FILE}
-gameName=horny-villa
-gameActivity=com.unity3d.player.UnityPlayerActivity
-downloadUrl="https://www.nutaku.net/games/horny-villa/app-update/"
+declare -A apps
+
+# Function to check if a command exists
+check_command() {
+
+  while [ "$#" -gt 0 ]; do
+    if ! command -v "$1" >/dev/null 2>&1; then
+      echo "$1 is not installed. Please install it to proceed."
+      exit 1
+    fi
+    shift
+  done
+}
+
+check_command curl apktool apksigner
+
+
+{
+  read
+  while IFS=, read -ra line || [ -n "$line" ]
+  do
+    apps[$line]="${line[@]}"
+  done
+} < apps.csv
+
 
 usage() {
-  cat <<EOF
-Usage: $0 [-h] [-p <password>]
+  cat << EOF
+Usage: $0 $(IFS="|"; echo "${!apps[*]}")
 
 OPTIONS:
   -h  Show this help message
-  -p  keystore password (requires an argument)
-  -g  game name (horny-villa|ark-recode|mafia-queens|wet-wealth)
 
 Example:
-  $0 -p password -g horny-villa
+  $0 horny-villa
 EOF
   exit 1
 }
 
 # Process options:
-while getopts ":p:g:h" opt; do
+while getopts ":h" opt; do
   case $opt in
-    p)
-      ksPass="$OPTARG"
-      ;;
-    g)
-      gameName="$OPTARG"
-      case $gameName in
-        horny-villa)
-          gameActivity=com.unity3d.player.UnityPlayerActivity
-          downloadUrl="https://www.nutaku.net/games/horny-villa/app-update/"
-          ;;
-        ark-recode)
-          gameActivity=com.nutaku.unity.UnityPlayerActivity
-          downloadUrl="https://www.nutaku.net/games/ark-recode/app-update/"
-          ;;
-        mafia-queens)
-          gameActivity=com.unity3d.player.UnityPlayerActivity
-          downloadUrl="https://www.nutaku.net/games/mafia-queens/app-update/"
-          ;;
-        wet-wealth)
-          gameActivity=com.unity3d.player.UnityPlayerActivity
-          downloadUrl="https://www.nutaku.net/games/wet-wealth/app-update/"
-          ;;
-        *)
-          usage
-          ;;
-      esac
-      ;;
     h)
       usage
       ;;
@@ -71,6 +64,15 @@ done
 
 shift $((OPTIND-1))
 
+if [[ -z "$1" ]]; then
+  usage
+fi
+
+read -r app_name app_activity app_download <<< ${apps[$1]}
+if [[ -z "$app_name" ]]; then
+  usage
+fi
+
 echo -e "Downloading ${APP_DEBUG_FILE}..."
 if [[ ! -f ${APP_DEBUG_FILE} ]]; then
   curl -L $APP_DEBUG_DOWNLOAD_URL -o $APP_DEBUG_FILE
@@ -79,10 +81,10 @@ else
 fi
 
 
-echo -e "\nDownloading latest ${gameName}..."
-gameFile=$(curl -w "%{url_effective}\n" -I -L -s -S $downloadUrl -o /dev/null)
+echo -e "\nDownloading latest ${app_name}..."
+gameFile=$(curl -w "%{url_effective}\n" -I -L -s -S $app_download -o /dev/null)
 if [ $? -ne 0 ]; then
-  echo -e "Cannot get latest ${gameName}, try again."
+  echo -e "Cannot get latest ${app_name}, try again."
   exit 1
 fi
 
@@ -90,9 +92,9 @@ gameFile=$(basename $gameFile)
 downloadFile=${DOWNLOAD_DIR}/${gameFile}
 
 if [[ ! -f ${downloadFile} ]]; then
-  curl -L $downloadUrl -o $downloadFile
+  curl -L $app_download -o $downloadFile
   if [ $? -ne 0 ]; then
-    echo -e "Cannot get latest ${gameName}, try again."
+    echo -e "Cannot get latest ${app_name}, try again."
     exit 1
   fi
 else
@@ -108,7 +110,7 @@ echo -e "\nDecoding ${gameFile} to ${gameOutput}..."
 apktool d -f $downloadFile -o ${gameOutput}
 
 echo -e "\nUpdate ${gameOutput}..."
-libName=lib${gameName}.so
+libName=lib${app_name}.so
 echo -e "Copy ${libName} to libModBNM.so"
 find $gameOutput/lib/* -maxdepth 0 ! -name "arm64-v8a" -exec rm -rf '{}' +
 cp $appDebugOutput/lib/arm64-v8a/${libName} $gameOutput/lib/arm64-v8a/libModBNM.so
@@ -125,11 +127,9 @@ apktool b -f ${gameOutput}
 gameDistFile=${gameOutput}/dist/${gameFile}
 signOutFile=${DIST_DIR}/${gameFile}
 mkdir -p ${DIST_DIR}
-if [[ -n "$ksPass" ]]; then
-  apksigner sign --ks ${SIGN_KS} --ks-pass "pass:${ksPass}" --v4-signing-enabled false --out ${signOutFile} ${gameDistFile}
-else
-  apksigner sign --ks ${SIGN_KS} --v4-signing-enabled false --out ${signOutFile} ${gameDistFile}
-fi
+
+apksigner sign --ks ${SIGN_KS} --ks-pass "pass:gaohong" --v4-signing-enabled false --out ${signOutFile} ${gameDistFile}
+
 
 echo -e "\nClear ${DECODE_DIR} dir..."
 rm -rf $DECODE_DIR
