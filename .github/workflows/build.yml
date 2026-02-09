@@ -19,8 +19,9 @@ jobs:
 
       - name: Setup apksigner
         run: |
-          echo "$ANDROID_HOME/build-tools/36.1.0" >> $GITHUB_PATH
-          apksigner --version
+          ls -la $ANDROID_HOME/build-tools
+          # echo "$ANDROID_HOME/build-tools/36.1.0" >> $GITHUB_PATH
+          # apksigner --version
 
       # - name: Setup apktool
       #   run: |
