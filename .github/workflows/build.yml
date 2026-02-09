@@ -17,9 +17,11 @@ jobs:
           distribution: "temurin" # See 'Supported distributions' for available options
           java-version: "21"
 
-      - name: Setup apktool
+      - name: Setup apksigner
         run: |
-          echo $ANDROID_HOME
+          echo "$ANDROID_HOME/build-tools/36.1.0" >> $GITHUB_PATH
+          apksigner --version
+
       # - name: Setup apktool
       #   run: |
       #     curl -o /usr/local/bin/apktool https://raw.githubusercontent.com/iBotPeaches/Apktool/master/scripts/linux/apktool
