@@ -1,4 +1,5 @@
 name: APK Build
+run-name: Build ${{ github.event.inputs.game }} by @${{ github.actor }}
 
 on:
   workflow_dispatch:
