@@ -1,10 +1,18 @@
-name: Apk build
+name: APK Build
 
 on:
-  push:
-    branches: ["main"]
-  pull_request:
-    branches: ["main"]
+  workflow_dispatch:
+    inputs:
+      game:
+        description: "Select Game"
+        required: true
+        default: "wet-wealth"
+        type: choice
+        options:
+          - wet-wealth
+          - horny-villa
+          - ark-recode
+          - mafia-queens
 
 jobs:
   build:
@@ -27,11 +35,16 @@ jobs:
           curl -L -o /usr/local/bin/apktool.jar https://github.com/iBotPeaches/Apktool/releases/download/v2.12.1/apktool_2.12.1.jar
           chmod +x /usr/local/bin/apktool /usr/local/bin/apktool.jar
 
-      - name: Build apk
-        run: ./build.sh wet-wealth
+      - name: Build APK
+        run: ./build.sh ${{ github.event.inputs.game }}
+
+      - name: Build Name
+        run: |
+          filename=$(ls dist)
+          echo "BUILD_NAME=${filename%.*}" >> $GITHUB_ENV
 
       - uses: actions/upload-artifact@v4
         with:
-          name: my-artifact
+          name: ${{ env.BUILD_NAME }}
           path: |
             dist/*.apk
