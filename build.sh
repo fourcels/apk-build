@@ -106,9 +106,19 @@ appDebugOutput=$DECODE_DIR/${APP_DEBUG%.*}
 echo -e "\nDecoding ${APP_DEBUG_FILE} to ${appDebugOutput}..."
 apktool d -f $APP_DEBUG_FILE -o $appDebugOutput
 
+if [ $? -ne 0 ]; then
+  echo -e "Cannot decode ${APP_DEBUG_FILE}, try again."
+  exit 1
+fi
+
 gameOutput=$DECODE_DIR/${gameFile%.*}
 echo -e "\nDecoding ${gameFile} to ${gameOutput}..."
 apktool d -f $downloadFile -o ${gameOutput}
+
+if [ $? -ne 0 ]; then
+  echo -e "Cannot decode ${gameFile}, try again."
+  exit 1
+fi
 
 echo -e "\nUpdate ${gameOutput}..."
 libName=lib${app_name}.so
@@ -124,6 +134,12 @@ invoke-static {p0}, Lcom/android/support/Main;->start(Landroid/content/Context;)
 
 echo -e "\nBuild and Sign ${gameFile}..."
 apktool b -f ${gameOutput}
+
+if [ $? -ne 0 ]; then
+  echo -e "Cannot build ${gameFile}, try again."
+  exit 1
+fi
+
 
 gameDistFile=${gameOutput}/dist/${gameFile}
 signOutFile=${DIST_DIR}/${gameFile}
