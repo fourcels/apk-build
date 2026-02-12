@@ -36,12 +36,8 @@ jobs:
       #     curl -L -o /usr/local/bin/apktool.jar https://github.com/iBotPeaches/Apktool/releases/download/v2.12.1/apktool_2.12.1.jar
       #     chmod +x /usr/local/bin/apktool /usr/local/bin/apktool.jar
 
-      - if: always()
-        run: |
-          for i in {1..5}; do
-            curl -I https://www.nutaku.net/games/wet-wealth/app-update
-            sleep 2
-          done
+      - run: |
+          download_url=$(curl -w "%{url_effective}\n" -ILsS https://www.nutaku.net/games/wet-wealth/app-update)
 
       # - name: Build APK
       #   env:
