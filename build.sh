@@ -93,9 +93,8 @@ fi
 
 
 echo -e "\nDownloading latest ${app_name}..."
-curl -w "%{url_effective}\n" -I -L -s -S $app_download
+curl -Iv $app_download
 download_url=$(curl -w "%{url_effective}\n" -I -L -s -S $app_download -o /dev/null)
-echo -e "\n$download_url"
 if [ $? -ne 0 ]; then
   echo -e "\nCannot get latest ${app_name}, try again." >&2
   exit 1
