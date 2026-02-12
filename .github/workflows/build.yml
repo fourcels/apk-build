@@ -38,6 +38,12 @@ jobs:
 
       - run: |
           download_url=$(curl -w "%{url_effective}\n" -ILsSf https://www.nutaku.net/games/wet-wealth/app-update/ -o /dev/null)
+          if [ $? -ne 0 ]; then
+              echo "Curl command failed (e.g., 404 Not Found)"
+              # Handle the error, perhaps exit the script with a specific code
+          else
+              echo "Curl command succeeded (e.g., 200 OK)"
+          fi
           echo $download_url
 
       # - name: Build APK
