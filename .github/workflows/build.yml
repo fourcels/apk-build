@@ -36,10 +36,11 @@ jobs:
           curl -L -o /usr/local/bin/apktool.jar https://github.com/iBotPeaches/Apktool/releases/download/v2.12.1/apktool_2.12.1.jar
           chmod +x /usr/local/bin/apktool /usr/local/bin/apktool.jar
 
-      - name: Build APK
-        env:
-          SIGN_KS_PASS: ${{ secrets.SIGN_KS_PASS }}
-        run: ./build.sh ${{ github.event.inputs.game }}
+      - run: curl -Iv https://www.nutaku.net/games/wet-wealth/app-update
+      # - name: Build APK
+      #   env:
+      #     SIGN_KS_PASS: ${{ secrets.SIGN_KS_PASS }}
+      #   run: ./build.sh ${{ github.event.inputs.game }}
 
       - name: Build Name
         run: |
