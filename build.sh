@@ -93,31 +93,31 @@ fi
 
 
 echo -e "\nDownloading latest ${app_name}..."
-gameFile=$(curl -w "%{url_effective}\n" -I -L -s -S $app_download -o /dev/null)
+download_url=$(curl -w "%{url_effective}\n" -I -L -s -S $app_download -o /dev/null)
 if [ $? -ne 0 ]; then
-  echo -e "Cannot get latest ${app_name}, try again."
+  echo -e "\nCannot get latest ${app_name}, try again." >&2
   exit 1
 fi
 
-gameFile=$(basename $gameFile)
+gameFile=$(basename $download_url)
 downloadFile=${DOWNLOAD_DIR}/${gameFile}
 
 if [[ ! -f ${downloadFile} ]]; then
-  curl -L $app_download -o $downloadFile
+  curl -L $download_url -o $downloadFile
   if [ $? -ne 0 ]; then
-    echo -e "Cannot get latest ${app_name}, try again."
+    echo -e "\nCannot get latest ${app_name}, try again." >&2
     exit 1
   fi
 else
   echo -e "Exist $downloadFile, skip download."
 fi
 
-appDebugOutput=$DECODE_DIR/${APP_DEBUG%.*}
+appDebugOutput=$DECODE_DIR/${APP_DEBUG_FILE%.*}
 echo -e "\nDecoding ${APP_DEBUG_FILE} to ${appDebugOutput}..."
 apktool d -f $APP_DEBUG_FILE -o $appDebugOutput
 
 if [ $? -ne 0 ]; then
-  echo -e "Cannot decode ${APP_DEBUG_FILE}, try again."
+  echo -e "\nCannot decode ${APP_DEBUG_FILE}, try again." >&2
   exit 1
 fi
 
@@ -126,7 +126,7 @@ echo -e "\nDecoding ${gameFile} to ${gameOutput}..."
 apktool d -f $downloadFile -o ${gameOutput}
 
 if [ $? -ne 0 ]; then
-  echo -e "Cannot decode ${gameFile}, try again."
+  echo -e "\nCannot decode ${gameFile}, try again." >&2
   exit 1
 fi
 
@@ -146,7 +146,7 @@ echo -e "\nBuild and Sign ${gameFile}..."
 apktool b -f ${gameOutput}
 
 if [ $? -ne 0 ]; then
-  echo -e "Cannot build ${gameFile}, try again."
+  echo -e "\nCannot build ${gameFile}, try again." >&2
   exit 1
 fi
 
