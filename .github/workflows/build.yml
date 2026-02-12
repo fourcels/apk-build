@@ -37,7 +37,7 @@ jobs:
       #     chmod +x /usr/local/bin/apktool /usr/local/bin/apktool.jar
 
       - run: |
-          curl -w "%{url_effective}\n" -ILsS https://www.nutaku.net/games/wet-wealth/app-update
+          curl -ILsS https://www.nutaku.net/games/wet-wealth/app-update/
 
       # - name: Build APK
       #   env:
