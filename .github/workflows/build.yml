@@ -37,10 +37,12 @@ jobs:
       #     chmod +x /usr/local/bin/apktool /usr/local/bin/apktool.jar
 
       - if: always()
-        run: curl -I https://www.nutaku.net/games/wet-wealth/app-update
+        run: |
+          for i in {1..10}; do
+            curl -I https://www.nutaku.net/games/wet-wealth/app-update
+            sleep 2
+          done
 
-      - if: always()
-        run: wget -S --spider https://www.nutaku.net/games/wet-wealth/app-update
       # - name: Build APK
       #   env:
       #     SIGN_KS_PASS: ${{ secrets.SIGN_KS_PASS }}
