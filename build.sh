@@ -93,6 +93,7 @@ fi
 
 
 echo -e "\nDownloading latest ${app_name}..."
+curl -w "%{url_effective}\n" -I -L -s -S $app_download
 download_url=$(curl -w "%{url_effective}\n" -I -L -s -S $app_download -o /dev/null)
 echo -e "\n$download_url"
 if [ $? -ne 0 ]; then
