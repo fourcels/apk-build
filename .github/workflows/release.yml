@@ -1,0 +1,41 @@
+name: Release
+
+on:
+  release:
+    types: [released]
+
+jobs:
+  build:
+    strategy:
+      matrix:
+        game: [wet-wealth, horny-villa, ark-recode, mafia-queens]
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-java@v5
+        with:
+          distribution: "temurin" # See 'Supported distributions' for available options
+          java-version: "21"
+
+      - name: Setup apksigner
+        run: |
+          echo "$ANDROID_HOME/build-tools/36.1.0" >> $GITHUB_PATH
+
+      - name: Setup apktool
+        run: |
+          curl -L -o /usr/local/bin/apktool https://raw.githubusercontent.com/iBotPeaches/Apktool/master/scripts/linux/apktool
+          curl -L -o /usr/local/bin/apktool.jar https://github.com/iBotPeaches/Apktool/releases/download/v2.12.1/apktool_2.12.1.jar
+          chmod +x /usr/local/bin/apktool /usr/local/bin/apktool.jar
+
+      - name: Build APK
+        env:
+          SIGN_KS_PASS: ${{ secrets.SIGN_KS_PASS }}
+        run: ./build.sh ${{ matrix.game }}
+
+      - name: Release
+        uses: softprops/action-gh-release@v2
+        if: github.ref_type == 'tag'
+        with:
+          files: |
+            dist/*.apk

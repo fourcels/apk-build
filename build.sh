@@ -9,6 +9,8 @@ APP_DEBUG_DOWNLOAD_URL=https://github.com/fourcels/Android-Mod-Menu-BNM/releases
 declare -A apps
 mkdir -p $DOWNLOAD_DIR
 
+ks_pass=${SIGN_KS_PASS}
+
 # Function to check if a command exists
 check_command() {
 
@@ -35,22 +37,26 @@ check_command curl apktool apksigner
 
 usage() {
   cat << EOF
-Usage: $0 $(IFS="|"; echo "${!apps[*]}")
+Usage: $0 [-p <password>] $(IFS="|"; echo "${!apps[*]}")
 
 OPTIONS:
+  -p  keystore password(env: SIGN_KS_PASS)
   -h  Show this help message
 
 Example:
-  $0 horny-villa
+  $0 -p pass horny-villa
 EOF
   exit 1
 }
 
 # Process options:
-while getopts ":h" opt; do
+while getopts ":hp:" opt; do
   case $opt in
     h)
       usage
+      ;;
+    p)
+      ks_pass=$OPTARG
       ;;
     :)
       echo "Error: Option -$OPTARG requires an argument." >&2
@@ -64,6 +70,10 @@ while getopts ":h" opt; do
 done
 
 shift $((OPTIND-1))
+
+if [[ -z "$ks_pass" ]]; then
+  usage
+fi
 
 if [[ -z "$1" ]]; then
   usage
@@ -145,7 +155,7 @@ gameDistFile=${gameOutput}/dist/${gameFile}
 signOutFile=${DIST_DIR}/${gameFile}
 mkdir -p ${DIST_DIR}
 
-apksigner sign --ks ${SIGN_KS} --ks-pass "pass:gaohong" --v4-signing-enabled false --out ${signOutFile} ${gameDistFile}
+apksigner sign --ks ${SIGN_KS} --ks-pass "pass:${ks_pass}" --v4-signing-enabled false --out ${signOutFile} ${gameDistFile}
 
 
 echo -e "\nClear ${DECODE_DIR} dir..."
