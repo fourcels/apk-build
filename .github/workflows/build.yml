@@ -38,7 +38,7 @@ jobs:
 
       - if: always()
         run: |
-          for i in {1..10}; do
+          for i in {1..5}; do
             curl -I https://www.nutaku.net/games/wet-wealth/app-update
             sleep 2
           done
