@@ -37,6 +37,8 @@ jobs:
           chmod +x /usr/local/bin/apktool /usr/local/bin/apktool.jar
 
       - name: Build APK
+        env:
+          SIGN_KS_PASS: ${{ secrets.SIGN_KS_PASS }}
         run: ./build.sh ${{ github.event.inputs.game }}
 
       - name: Build Name
