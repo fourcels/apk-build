@@ -139,8 +139,15 @@ echo -e "Copy smali_classes to ${gameOutput}"
 cp -r $appDebugOutput/smali_classes* $gameOutput
 gameActivityFile=$gameOutput/smali/${app_activity//./\/}.smali
 echo -e "Edit ${gameActivityFile}"
-sed -i '' '/.method protected onCreate/a\
-invoke-static {p0}, Lcom/android/support/Main;->start(Landroid/content/Context;)V' $gameActivityFile
+
+if [[ "$OSTYPE" == "linux-gnu" ]]; then
+  sed -i '/.method protected onCreate/a\
+  invoke-static {p0}, Lcom/android/support/Main;->start(Landroid/content/Context;)V' $gameActivityFile
+else
+  sed -i '' '/.method protected onCreate/a\
+  invoke-static {p0}, Lcom/android/support/Main;->start(Landroid/content/Context;)V' $gameActivityFile
+fi
+
 if [ $? -ne 0 ]; then
   echo -e "Cannot replace ${app_activity}, try again." >&2
   exit 1
