@@ -137,10 +137,14 @@ find $gameOutput/lib/* -maxdepth 0 ! -name "arm64-v8a" -exec rm -rf '{}' +
 cp $appDebugOutput/lib/arm64-v8a/${libName} $gameOutput/lib/arm64-v8a/libModBNM.so
 echo -e "Copy smali_classes to ${gameOutput}"
 cp -r $appDebugOutput/smali_classes* $gameOutput
-gameActivityFile=$gameOutput/smali/${gameActivity//./\/}.smali
+gameActivityFile=$gameOutput/smali/${app_activity//./\/}.smali
 echo -e "Edit ${gameActivityFile}"
 sed -i '' '/.method protected onCreate/a\
 invoke-static {p0}, Lcom/android/support/Main;->start(Landroid/content/Context;)V' $gameActivityFile
+if [ $? -ne 0 ]; then
+  echo -e "Cannot replace ${app_activity}, try again." >&2
+  exit 1
+fi
 
 echo -e "\nBuild and Sign ${gameFile}..."
 apktool b -f ${gameOutput}
