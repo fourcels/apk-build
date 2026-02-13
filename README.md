@@ -2,13 +2,10 @@
 
 build android menu mod with [Android-Mod-Menu-BNM](https://github.com/fourcels/Android-Mod-Menu-BNM)
 
-## Build with Shell
+[Mods](https://github.com/fourcels/apk-build/releases/latest)
 
-```bash
-./build.sh wet-wealth
-```
+## Getting Start
 
-## Build with Action
+1. Replace `sign.jks` with yours
 
-1. Fork [apk-build](https://github.com/fourcels/apk-build) repo
-2. Go to Actions -> APK Build -> Run workflow -> Artifacts
+2. Run shell `./build.sh -p kspass wet-wealth`
