@@ -12,7 +12,12 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        game: [wet-wealth, horny-villa, ark-recode, mafia-queens]
+        game:
+          - wet-wealth
+          - horny-villa
+          - ark-recode
+          - mafia-queens
+          - passion-industry
     runs-on: ubuntu-latest
 
     steps:
@@ -29,7 +34,7 @@ jobs:
       - name: Setup apktool
         run: |
           curl -L -o /usr/local/bin/apktool https://raw.githubusercontent.com/iBotPeaches/Apktool/master/scripts/linux/apktool
-          curl -L -o /usr/local/bin/apktool.jar https://github.com/iBotPeaches/Apktool/releases/download/v2.12.1/apktool_2.12.1.jar
+          curl -L -o /usr/local/bin/apktool.jar https://github.com/iBotPeaches/Apktool/releases/download/v3.0.1/apktool_3.0.1.jar
           chmod +x /usr/local/bin/apktool /usr/local/bin/apktool.jar
 
       - name: Build APK
