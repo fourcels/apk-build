@@ -18,6 +18,7 @@ jobs:
           - ark-recode
           - mafia-queens
           - passion-industry
+          - kinky-cats
     runs-on: ubuntu-latest
 
     steps:
